@@ -1,0 +1,22 @@
+# Archivos y directorios generados automáticamente
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Directorio virtualenv
+venv/
+migrations/
+# Archivo de registro de errores
+error.log
+
+# Archivo de base de datos SQLite (cambia el nombre si usas otro motor de base de datos)
+*.db
+
+# Archivos generados por el sistema operativo
+.DS_Store
+Thumbs.db
+
+# Variables de entorno (asegúrate de que estos nombres coincidan con tus variables)
+.env
+*.env

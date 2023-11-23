@@ -1,0 +1,50 @@
+{%extends 'layout.html'%}
+
+{% block tittle %}
+Crear Producto
+{% endblock %}
+
+{%block main%}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+
+            <form action="/product/new" method='POST' class="card shadow">
+
+                <div class="card-body">
+
+                    <div class="form-floating mb-2">
+                        <input type="text" name="nombre_producto" id="nombre_producto" placeholder='Nombre de Producto' class="form-control">
+                        <label for="nombre_producto" class="">Nombre de Producto</label>
+                    </div>
+
+                    <div class="form-floating mb-2">
+                        <input type="text" name="proveedor" id="proveedor" placeholder='Proveedor' class="form-control">
+                        <label for="proveedor">Proveedor</label>
+                    </div>
+
+                    <div class="form-floating mb-2">
+                        <input type="number" name="cantidad" id="cantidad" placeholder='Cantidad Disponible' class="form-control">
+                        <label for="cantidad">Cantidad Disponible</label>
+                    </div>
+
+                    <div class="form-floating mb-2">
+                        <input type="number" name="precio" id="precio" placeholder='Precio Unitario' class="form-control">
+                        <label for="precio">Precio Unitario</label>
+                    </div>
+
+                    <div class="container d-flex justify-content-center align-items-center">
+                        <button type="submit" class="btn btn-primary">Crear Producto</button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+{{super()}}
