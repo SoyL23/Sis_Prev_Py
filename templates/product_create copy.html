@@ -6,15 +6,15 @@ Crear Producto
 
 {%block main%}
 
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-5">
             <br/>
 
             <form action="/product/new" method='POST' class="card shadow">
-                <center>
-                    <h1>Producto</h1>
-                </center>
+
                 <div class="card-body">
 
                     <div class="form-floating mb-2">
@@ -45,27 +45,22 @@ Crear Producto
 
             </form>
         </div>
-        
         <div class="col-lg-7">
-            {% for product in products %}
-            <br/>
-            <div class="card mb-1 text-white bg-dark">
-                
-                <div class="card-body">
-                    
-                    <div class="d-flex justify-content-between">
-                        <h5>{{product.producto_nombre}}</h5>
+            <div> <!-- lista-->
+                {% for product in products %}
+                    <div>
+                        <h5>{{ product.producto_nombre}}</h5>
                         <div>
-                            <a href="{{ url_for('product.product_update', id=product.id) }}" class="btn btn-dark btn-sm rounded-0">Update</a> <!-- este href llama la función product_update-->
-                            <a href="{{ url_for('product.product_delete', id=product.id) }}" class="btn btn-danger btn-sm rounded-0">Delete</a> <!-- este href llama la función product_delete-->
+                            <a href="{{ url_for('product.product_update', id=product.id) }}">Update</a> <!-- este href llama la función product_update-->
+                            <a href="{{ url_for('product.product_delete', id=product.id) }}">Delete</a> <!-- este href llama la función product_delete-->
                         </div>
+                        <p>{{ product.producto_proveedor }}</p>
+                        <p>{{ product.producto_foto }}</p>
+                        <p>{{ product.producto_caracteristicas }}</p>
                     </div>
-                    <p>{{ product.producto_proveedor }}</p>
-                    <p>{{ product.producto_foto }}</p>
-                    <p>{{ product.producto_caracteristicas }}</p>
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+
         </div>
     </div>
 </div>

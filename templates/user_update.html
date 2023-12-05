@@ -1,0 +1,74 @@
+{%extends 'layout.html'%}
+
+{% block tittle %}
+Actualizar Usuario
+{% endblock %}
+
+{%block main%}
+
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <br/>
+            
+            <form action="/user_update/{{user.id}}" method='POST' class="card shadow">
+
+                <div class="card-body">
+   
+
+                    <div class="form-floating mb-2">
+                        <input type="text" name="nombre" id="nombre" placeholder='Nombre' class="form-control" value="{{user.nombre}}">
+                        <label for="nombre" class="">Nombre</label>
+                    </div>
+
+                    <div class="form-floating mb-2">
+                        <input type="text" name="apellido" id="apellido" placeholder='Apellido' class="form-control" value="{{user.apellido}}">
+                        <label for="apellido">Apellido</label>
+                    </div>
+
+
+                    <div class="form-floating mb-2">
+                        <input name='email' type="email" class="form-control" placeholder="correo@ejemplo.com" value="{{user.email}}">
+                        <label for="email">correo@ejemplo.com</label>
+                    </div>
+
+                    <div class="form-floating mb-2">
+                        <input type="text" name="username" id="username" placeholder='Username' class="form-control" value="{{user.username}}">
+                        <label for="username">Username</label>
+                    </div>
+
+                    <div class="form-floating mb-2">
+                        <input type="password" class="form-control" name="password"  placeholder="Contraseña" value="{{user.password}}">
+                        <label for="password">Contraseña</label>
+                    </div>
+
+
+                    <div class="form-floating mb-2">
+                        <input type="number" name="celular" id="celular" placeholder='N° Celular' class="form-control" value="{{user.celular}}">
+                        <label for="celular" class="">N° Celular</label>
+                    </div>
+
+                    <div class="form-floating mb-2">
+                        <select name="ciudad" id="ciudad" class="form-select" value="{{user.ciudad}}">
+                            <option disabled selected value="">Selecciona una ciudad</option>
+                            <option value="Santiago">Santiago</option>
+                            <option value="Valdivia">Valdivia</option>
+                        </select>
+                        <label for="ciudad" class=""></label>
+                    </div>
+
+                    <div class="container d-flex justify-content-center align-items-center">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+{{super()}}
