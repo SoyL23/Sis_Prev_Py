@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from config.db import db
 from models.user import User
 from validaciones.user import Validar_User
@@ -49,11 +49,15 @@ def user_create():
     users=User.query.all() #esto es como hacer Select * para hacer lista
     return render_template('user_create.html', users=users) # se agrega products para pasar la lista
 
-@user.route('/user/new', methods=['POST']) # al enviar el usuario los datos, se activa el user_new
+@user.route('/user/new', methods=['POST', 'GET']) # al enviar el usuario los datos, se activa el user_new
 def user_new():
     data= request.form
-    nombre = (nombre := validar.validar_apellido(data['nombre']))
-    print(nombre)
+
+    if not validar.validar_nombre(data['nombre']):
+        return jsonify({'Nombre no valido'})    
+    else:
+        nombre = data['nombre']
+
     # apellido = data['apellido']
     # email = data['email']
     # username = data['username']

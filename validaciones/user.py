@@ -13,9 +13,14 @@ class Validar_User():
 
     def validar_nombre(self, nombre):
         if len(nombre) > validaciones['max_len'] or len(nombre) < validaciones['min_len']:
-            return 'El nombre debe tener entre 4 y 25 caracteres'
+            mensaje = 'El nombre debe tener entre 4 y 25 caracteres'
+            print(mensaje)
+            return False
         if type(nombre) == validaciones['type_data']:
-            return 'Tipo de dato no válido'
+            mensaje = 'Tipo de dato no válido'
+            print(mensaje)
+            return False
+        return True
         
     def validar_apellido(self, apellido): 
         if len(apellido) > validaciones['max_len'] or len(apellido) < validaciones['min_len']:
