@@ -6,8 +6,8 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
    # fullname = db.Column(db.String(50))
-    nombre = db.Column(db.String(50))
-    apellido = db.Column(db.String(50))
+    nombre = db.Column(db.String(25))
+    apellido = db.Column(db.String(25))
     email = db.Column(db.String(50))
     #username = db.Column(db.String(15), unique=True)
     username = db.Column(db.String(15))
