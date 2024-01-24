@@ -4,18 +4,19 @@ class Country(db.Model):
     __tablename__ = 'TBL_Country'
 
     id = db.Column(db.Integer, primary_key=True)
-    country = db.Column(db.String(50), nullable=False)
-    country_description = db.Column(db.String(255))
+    name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text)
 
-    def __init__(self, country, country_description):
+    def __init__(self, name, description):
         super().__init__()
-        self.country = country
-        self.country_description = country_description
+        self.name = name
+        self.description = description
 
     def __repr__(self):
-        return f'<{self.country}>'
+        return f'<{self.name}>'
     
     def to_dict(self):
         return {
-            "country": self.country,
+            "country": self.name,
+            "description": self.description
         }

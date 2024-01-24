@@ -2,6 +2,7 @@ from flask import Flask, send_from_directory, request
 from config.config import ConfigDev
 from controllers.user import user
 from controllers.product import product
+from controllers.offer import offer
 from sqlalchemy import create_engine
 from config.db import db
 from flask_migrate import Migrate
@@ -31,4 +32,4 @@ migrate = Migrate(app, db)
 
 app.register_blueprint(user)
 app.register_blueprint(product)
-# app.register_blueprint(demand)
+app.register_blueprint(offer)

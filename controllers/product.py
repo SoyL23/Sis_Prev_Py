@@ -14,12 +14,13 @@ def product_create():
     elif request.method == 'POST':
         try:
             if product != None:
-                product_name = product['product_name']
-                product_value = product['product_value']
-                product_photo = product['product_photo']
-                product_description = product['product_description']
-                new_product = Product(product_name, product_value,product_photo, product_description)
-                print(new_product.product_name)
+                name = product['name']
+                variety = product['variety']
+                value = product['value']
+                photo = product['photo']
+                description = product['description']
+                new_product = Product(name=name,variety=variety, value=value,photo=photo, description=description)
+                print(new_product.name)
                 db.session.add(new_product)
                 db.session.commit() 
                 return make_response('Producto Creado', 200)
@@ -49,9 +50,10 @@ def update_product(id):
         update_product = request.get_json()
         product = Product.query.get(id)
         if update_product != None:
-            product.product_name = update_product['product_name']
-            product.product_value = update_product['product_value']
-            product.product_description = update_product['product_description']
+            product.name = update_product['name']
+            product.variety = update_product['variety']
+            product.value = update_product['value']
+            product.description = update_product['description']
             db.session.commit()
             return make_response('Producto Actualizado', 200)
         

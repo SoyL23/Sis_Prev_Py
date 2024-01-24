@@ -12,28 +12,32 @@ user = Blueprint('user', __name__)
 @require_content_type('aplication/JSON')
 @user.route('/user/create',  methods=['GET', 'POST'])
 def user_create():
-    user_data = request.get_json()
+    
     if request.method == 'GET':
         try:
             return render_template('user_create')
         except Exception as e:
             return 'Ha ocurrido un error: ' + str(e)
     elif request.method == 'POST':
-        try:
-            first_name = user_data['first_name']
-            last_name = user_data['last_name']
-            email = user_data['email']
-            username = user_data['username']
-            password= user_data['password']
-            cellphone = user_data['cellphone']
-            city_id = user_data['city_id']
-            role_id = user_data['role_id']
-            user_new = User(first_name, last_name, email, username,  password, cellphone, city_id,role_id)
-            db.session.add(user_new)
-            db.session.commit()
-            return make_response('Se ha creado el usuario', 200)
-        except Exception as e:
-            return 'Ha ocurrido un error: ' + str(e)
+        user_data = request.get_json()
+        if user_data:
+            try:
+                first_name = user_data['first_name']
+                last_name = user_data['last_name']
+                email = user_data['email']
+                username = user_data['username']
+                password= user_data['password']
+                cellphone = user_data['cellphone']
+                city_id = user_data['city_id']
+                role_id = user_data['role_id']
+                user_new = User(first_name, last_name, email, username,  password, cellphone, city_id,role_id)
+                db.session.add(user_new)
+                db.session.commit()
+                return make_response('Se ha creado el usuario', 200)
+            except Exception as e:
+                return 'Ha ocurrido un error: ' + str(e)
+        else:
+            return make_response('Ha ocurrido un error: Hay campos vacíos')
     else:
         make_response('Metodo HTTP Inválido', 415)
 
@@ -73,7 +77,7 @@ def user_update(id):
         if user != None:
             user.first_name = user_updated['first_name']
             user.last_name = user_updated["last_name"]
-            user.email_user = user_updated["email"]
+            user.email = user_updated["email"]
             user.username = user_updated["username"]
             user.password = user_updated["password"]
             user.cellphone = user_updated["cellphone"]
