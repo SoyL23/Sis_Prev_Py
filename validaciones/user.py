@@ -28,7 +28,6 @@ class Validar_User():
         if type(apellido) == validaciones['type_data']:
             return 'Tipo de dato no válido'
         
-
     def validar_email(self):
         pass
     def validar_username(self):

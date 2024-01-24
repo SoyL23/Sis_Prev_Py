@@ -1,18 +1,27 @@
 from config.db import db
+import decimal
 
 class Product(db.Model):
 
     __tablename__ ='TBL_Product'
 
     id = db.Column(db.Integer, primary_key=True)
-    producto_nombre = db.Column(db.String(50))
-    producto_proveedor = db.Column(db.String(50)) # aqui debe ir una llave foren_key
-    producto_foto = db.Column(db.String(50)) # aquí debe ir un tipo de dato file
-    producto_caracteristicas = db.Column(db.String(255))
-   
-    def __init__(self,producto_nombre,producto_proveedor,producto_foto,producto_caracteristicas):
+    product_name = db.Column(db.String(50))
+    product_value = db.Column(db.Double())
+    product_photo = db.Column(db.LargeBinary(), nullable=True)
+    product_description = db.Column(db.String(255))
+
+    def __init__(self,product_name,product_value,product_photo,product_description):
         super().__init__()
-        self.producto_nombre = producto_nombre
-        self.producto_proveedor = producto_proveedor
-        self.producto_foto = producto_foto
-        self.producto_caracteristicas = producto_caracteristicas
+        self.product_name = product_name
+        self.product_value = product_value
+        self.product_photo = product_photo
+        self.product_description = product_description
+
+    def to_dict(self):
+        return{
+            'name': self.product_name,
+            'value': self.product_value,
+            'description': self.product_description
+        }
+            

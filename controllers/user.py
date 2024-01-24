@@ -1,72 +1,105 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, make_response, jsonify
 from config.db import db
 from models.user import User
 from validaciones.user import Validar_User
-
+from controllers.require_content_type import require_content_type
 validar = Validar_User()
 
 user = Blueprint('user', __name__)
 
-@user.route('/')
-def index():
-    return'El servidor esta correcto'
-
-@user.route('/login')
-def login():
-    return render_template('')
-
-@user.route('/user_update/<id>', methods =['POST', 'GET'])
-def user_update(id):
-    user = User.query.get(id)
-    if request.method == 'POST':
-        user.nombre = request.form["nombre"]
-        user.apellido = request.form["apellido"]
-        user.email = request.form["email"]
-        user.username = request.form["username"]
-        user.password = request.form["password"]
-        user.celular = request.form["celular"]
-        user.ciudad = request.form["ciudad"]
-        
-        db.session.commit()
-        return redirect('/user/create')
-
-    return render_template('user_update.html', user=user)
-
-#------------------------------------------------------------------delete
-@user.route('/user/delete/<id>') #recibe del href el id y lo pasa a la funcion
-def user_delete(id):#aquí la función recibe el id
-    user = User.query.get(id)
-    db.session.delete(user)
-    db.session.commit()
+#------------------------------------------------------------------------------------Inicio Create User
     
-    return redirect('/user/create')
-   # return render_template('user_delete.html')
-   # return "se eliminó  el usuario"
-
-#---------------------------------------------------------------------create
-@user.route('/user/create')
+@require_content_type('aplication/JSON')
+@user.route('/user/create',  methods=['GET', 'POST'])
 def user_create():
-    users=User.query.all() #esto es como hacer Select * para hacer lista
-    return render_template('user_create.html', users=users) # se agrega products para pasar la lista
-
-@user.route('/user/new', methods=['POST', 'GET']) # al enviar el usuario los datos, se activa el user_new
-def user_new():
-    data= request.form
-
-    if not validar.validar_nombre(data['nombre']):
-        return jsonify({'Nombre no valido'})    
+    user_data = request.get_json()
+    if request.method == 'GET':
+        try:
+            return render_template('user_create')
+        except Exception as e:
+            return 'Ha ocurrido un error: ' + str(e)
+    elif request.method == 'POST':
+        try:
+            first_name = user_data['first_name']
+            last_name = user_data['last_name']
+            email = user_data['email']
+            username = user_data['username']
+            password= user_data['password']
+            cellphone = user_data['cellphone']
+            city_id = user_data['city_id']
+            role_id = user_data['role_id']
+            user_new = User(first_name, last_name, email, username,  password, cellphone, city_id,role_id)
+            db.session.add(user_new)
+            db.session.commit()
+            return make_response('Se ha creado el usuario', 200)
+        except Exception as e:
+            return 'Ha ocurrido un error: ' + str(e)
     else:
-        nombre = data['nombre']
+        make_response('Metodo HTTP Inválido', 415)
 
-    # apellido = data['apellido']
-    # email = data['email']
-    # username = data['username']
-    # password= data['password']
-    # celular = data['celular']
-    # ciudad = data['ciudad']
+#------------------------------------------------------------------------------------Fin Create User
+        
+#------------------------------------------------------------------------------------Inicio Read User
 
-    # user_new = User(nombre, apellido, email, username,  password, celular, ciudad)
-    # db.session.add(user_new)
-    # db.session.commit()
+@require_content_type('aplication/JSON')
+@user.route('/user/get/list')
+def get_users():
+    try:
+        user_list = {}
+        users = User.query.all()
+        if users != None:
+            for user in users:
+                user_list[user.id] = user.to_dict()
+            return jsonify(user_list)
+        else:
+            return make_response('No hay usuarios')
+    except Exception as e:
+        return 'Ha ocurrido un error: ' + str(e)
+    
+@user.route('/user/get/<id>')
+def get_user(id):
+     user = User.query.get(id)
+     return jsonify(user.to_dict())
+#------------------------------------------------------------------------------------Fin Read User
 
-    return redirect('/user/create')
+#------------------------------------------------------------------------------------Inicio Update User
+
+@require_content_type('aplication/JSON')
+@user.route('/user/update/<id>', methods =['POST', 'GET'])
+def user_update(id):
+    user_updated = request.get_json()
+    if request.method == 'POST':
+        user = User.query.get(id)
+        if user != None:
+            user.first_name = user_updated['first_name']
+            user.last_name = user_updated["last_name"]
+            user.email_user = user_updated["email"]
+            user.username = user_updated["username"]
+            user.password = user_updated["password"]
+            user.cellphone = user_updated["cellphone"]
+            user.city_id = user_updated["city_id"]
+            user.role_id = user_updated["role_id"]
+            db.session.commit()
+            return make_response('Usuario Modificado', 200)
+        else: 
+            return make_response('Usuario no Encontrado')
+    elif request.method == 'GET':
+        return 'waiting'
+    
+#------------------------------------------------------------------------------------Fin Update User
+
+#------------------------------------------------------------------------------------Inicio Delete User
+@require_content_type('aplication/JSON')
+@user.route('/user/delete/<id>') 
+def user_delete(id):
+    try:
+        user = User.query.get(id)
+        if user != None:
+            db.session.delete(user)
+            db.session.commit()
+            return make_response('Usuario eliminado', 200)
+        else: 
+            return make_response('Usuario no Encontrado')
+    except Exception as e:
+        return 'Ha ocurrido un error: ' + str(e)
+#------------------------------------------------------------------------------------End Delete User
