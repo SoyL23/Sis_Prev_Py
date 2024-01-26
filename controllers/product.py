@@ -20,28 +20,33 @@ def product_create():
                 photo = product['photo']
                 description = product['description']
                 new_product = Product(name=name,variety=variety, value=value,photo=photo, description=description)
-                print(new_product.name)
-                db.session.add(new_product)
-                db.session.commit() 
+                with db.session.begin():
+                    db.session.add(new_product)
+                    db.session.commit() 
+                    db.session.close()
                 return make_response('Producto Creado', 200)
             else: 
                 return make_response('Producto Vacío', 400) 
         except Exception as e:
             return 'Ha ocurrido un error: ' + str(e)
     else:
-        return make_response('Metodo HTTP no válido', 415)
+        return make_response('Invalid Request', 400)
     
 @require_content_type('aplication/JSON')
-@product.route('/product/delete/<id>', methods=['GET'])
+@product.route('/product/delete/<id>', methods=['POST'])
 def delete_product(id):
     product_deleted = Product.query.get(id)
-    if request.method == 'GET':
+    if request.method == 'POST':
         try:
-            db.session.delete(product_deleted)
-            db.session.commit()
+            with db.session.begin():
+                db.session.delete(product_deleted)
+                db.session.commit()
+                db.session.close()
             return make_response('Producto Eliminado', 200)
         except Exception as e:
             return 'Ha ocurrido un error: ' + str(e)
+    else:
+        return make_response('Invalid Request', 400)
         
 @require_content_type('aplication/JSON')
 @product.route('/product/update/<id>', methods=['GET', 'POST'])
@@ -52,27 +57,32 @@ def update_product(id):
         update_product = request.get_json()
         product = Product.query.get(id)
         if update_product != None:
+
             product.name = update_product['name']
             product.variety = update_product['variety']
             product.value = update_product['value']
             product.description = update_product['description']
-            db.session.commit()
+
+            with db.session.begin():
+                db.session.commit()
+                db.session.close()
+
             return make_response('Producto Actualizado', 200)
+    else:
+        return make_response('Invalid Request', 400)
         
 @require_content_type('aplication/JSON')
-@product.route('/product/get/<id>', methods=['GET', 'POST'])
+@product.route('/product/get/<id>', methods=['GET'])
 def get_product(id):
     if request.method == 'GET':
         product = Product.query.get(id)
         if product != None:
             return jsonify(product.to_dict())
-        pass
-    elif request.method == 'POST':
-        pass
     else:
-        pass
+        return make_response('Invalid Request', 400)
+    
 @require_content_type('aplication/JSON')
-@product.route('/product/get/list', methods=['GET', 'POST'])
+@product.route('/product/get/list', methods=['GET'])
 def get_products():
     if request.method == 'GET':
         products = Product.query.all()
@@ -80,8 +90,5 @@ def get_products():
         for product in products:
             list_products[product.id] = product.to_dict()
         return jsonify(list_products)
-        pass
-    elif request.method == 'POST':
-        pass
     else:
-        pass
+        return make_response('Invalid Request', 400)

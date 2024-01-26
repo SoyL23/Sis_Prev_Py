@@ -2,7 +2,6 @@ from config.db import db
 from models.city import City
 from models.user import User
 from models.product import Product
-from models.sell import Sell
 
 class PointSell(db.Model):
     __tablename__ ='TBL_Sell_Points'
@@ -25,15 +24,16 @@ class PointSell(db.Model):
     cooperative = db.relationship('Cooperative', backref=db.backref('point_sells', lazy='dynamic'))
 
     products = db.relationship('Product', secondary='point_sell_products', backref=db.backref('point_sells', lazy='dynamic'))
-    sells = db.relationship('Sell', backref=db.backref('point_sell', lazy='dynamic'))
+    sells = db.relationship('Sell', backref='point_sell', lazy='dynamic')
+
 
     def __init__(self, name, address, city_id, phone=None, email=None, user_id=None, cooperative_id=None):
         super().__init__()
         self.name = name
         self.address = address
-        self.city_id = city_id
         self.phone = phone
         self.email = email
+        self.city_id = city_id
         self.user_id = user_id
         self.cooperative_id = cooperative_id
 

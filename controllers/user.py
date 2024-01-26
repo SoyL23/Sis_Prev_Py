@@ -15,7 +15,7 @@ def user_create():
     
     if request.method == 'GET':
         try:
-            return render_template('user_create')
+            return jsonify('En desarrollo')
         except Exception as e:
             return 'Ha ocurrido un error: ' + str(e)
     elif request.method == 'POST':
@@ -33,8 +33,10 @@ def user_create():
                 user_new = User(first_name=first_name, last_name=last_name, email=email,
                                 username=username,  password=password, cellphone=cellphone,
                                 city_id=city_id,role_id=role_id)
-                db.session.add(user_new)
-                db.session.commit()
+                with db.session.begin():
+                    db.session.add(user_new)
+                    db.session.commit()
+                    
                 return make_response('Se ha creado el usuario', 200)
             except Exception as e:
                 return 'Ha ocurrido un error: ' + str(e)
@@ -86,10 +88,13 @@ def user_update(id):
             user.cellphone = user_updated["cellphone"]
             user.city_id = user_updated["city_id"]
             user.role_id = user_updated["role_id"]
-            db.session.commit()
+
+            with db.session.begin():
+                db.session.commit()
+                
             return make_response('Usuario Modificado', 200)
         else: 
-            return make_response('Usuario no Encontrado')
+            return make_response('Usuario no Encontrado',200)
     elif request.method == 'GET':
         return 'waiting'
     
@@ -97,16 +102,19 @@ def user_update(id):
 
 #------------------------------------------------------------------------------------Inicio Delete User
 @require_content_type('aplication/JSON')
-@user.route('/user/delete/<id>') 
+@user.route('/user/delete/<id>', methods=['POST']) 
 def user_delete(id):
-    try:
-        user = User.query.get(id)
-        if user != None:
-            db.session.delete(user)
-            db.session.commit()
-            return make_response('Usuario eliminado', 200)
-        else: 
-            return make_response('Usuario no Encontrado')
-    except Exception as e:
-        return 'Ha ocurrido un error: ' + str(e)
+    if request.method == 'POST':
+        try:
+            user = User.query.get(id)
+            if user != None:
+                with db.session.begin():
+                    db.session.delete(user)
+                    db.session.commit()
+                    
+                return make_response('Usuario eliminado', 200)
+            else: 
+                return make_response('Usuario no Encontrado', 200)
+        except Exception as e:
+            return 'Ha ocurrido un error: ' + str(e)
 #------------------------------------------------------------------------------------End Delete User
