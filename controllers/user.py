@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, make_response, jsonify
 from config.db import db
 from models.user import User
 from validaciones.user import Validar_User
-from controllers.require_content_type import require_content_type
+from services.require_content_type import require_content_type
 validar = Validar_User()
 
 user = Blueprint('user', __name__)
@@ -30,7 +30,9 @@ def user_create():
                 cellphone = user_data['cellphone']
                 city_id = user_data['city_id']
                 role_id = user_data['role_id']
-                user_new = User(first_name, last_name, email, username,  password, cellphone, city_id,role_id)
+                user_new = User(first_name=first_name, last_name=last_name, email=email,
+                                username=username,  password=password, cellphone=cellphone,
+                                city_id=city_id,role_id=role_id)
                 db.session.add(user_new)
                 db.session.commit()
                 return make_response('Se ha creado el usuario', 200)
@@ -60,6 +62,7 @@ def get_users():
     except Exception as e:
         return 'Ha ocurrido un error: ' + str(e)
     
+@require_content_type('aplication/JSON')
 @user.route('/user/get/<id>')
 def get_user(id):
      user = User.query.get(id)

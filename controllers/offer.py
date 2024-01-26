@@ -1,8 +1,11 @@
 from flask import Blueprint, request, make_response, jsonify
 from models.offer import Offer
 from config.db import db
+from services.require_content_type import require_content_type
+
 offer = Blueprint('offer', __name__)
 
+@require_content_type('aplication/JSON')
 @offer.route('/offer/create', methods = ['GET', 'POST'])
 def create_offer():
     new_offer_data = request.get_json()
@@ -31,6 +34,7 @@ def create_offer():
     else: 
         return('Ha ocurrido un error')
     
+@require_content_type('aplication/JSON')   
 @offer.route('/offer/delete/<id>', methods = ['GET', 'POST'])
 def delete_offer(id):
     if request.method == 'GET':
@@ -50,6 +54,7 @@ def delete_offer(id):
     else: 
         return('Ha ocurrido un error')
     
+@require_content_type('aplication/JSON')   
 @offer.route('/offer/update/<id>', methods = ['GET', 'POST'])
 def update_offer(id):
     if request.method == 'GET':

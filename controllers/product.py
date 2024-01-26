@@ -1,4 +1,4 @@
-from controllers.require_content_type import require_content_type
+from services.require_content_type import require_content_type
 from models.product import Product
 from config.db import db
 from flask import Blueprint, make_response, request, jsonify
@@ -8,11 +8,11 @@ product = Blueprint('product', __name__)
 @require_content_type('Aplication/Json')
 @product.route('/product/create', methods=['GET', 'POST'])
 def product_create():
-    product = request.get_json()
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
         try:
+            product = request.get_json()
             if product != None:
                 name = product['name']
                 variety = product['variety']
@@ -30,7 +30,8 @@ def product_create():
             return 'Ha ocurrido un error: ' + str(e)
     else:
         return make_response('Metodo HTTP no válido', 415)
-
+    
+@require_content_type('aplication/JSON')
 @product.route('/product/delete/<id>', methods=['GET'])
 def delete_product(id):
     product_deleted = Product.query.get(id)
@@ -41,7 +42,8 @@ def delete_product(id):
             return make_response('Producto Eliminado', 200)
         except Exception as e:
             return 'Ha ocurrido un error: ' + str(e)
-
+        
+@require_content_type('aplication/JSON')
 @product.route('/product/update/<id>', methods=['GET', 'POST'])
 def update_product(id):
     if request.method == 'GET':
@@ -57,7 +59,7 @@ def update_product(id):
             db.session.commit()
             return make_response('Producto Actualizado', 200)
         
-
+@require_content_type('aplication/JSON')
 @product.route('/product/get/<id>', methods=['GET', 'POST'])
 def get_product(id):
     if request.method == 'GET':
@@ -69,7 +71,7 @@ def get_product(id):
         pass
     else:
         pass
-
+@require_content_type('aplication/JSON')
 @product.route('/product/get/list', methods=['GET', 'POST'])
 def get_products():
     if request.method == 'GET':

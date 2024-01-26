@@ -5,15 +5,16 @@ from models.offer import Offer
 class Demand(db.Model):
     __tablename__ ='TBL_Demand'
     id = db.Column(db.Integer, primary_key=True)
-    offer_id = db.Column(db.Integer, db.ForeignKey('TBL_Offer.id'))
+    
     total = db.Column(db.Double)
-    user_id = db.Column(db.Integer, db.ForeignKey('TBL_User.id'))
     creation_date = db.Column(db.DateTime, default=db.func.now())
-
+    
+    offer_id = db.Column(db.Integer, db.ForeignKey('TBL_Offer.id'))
     offer = db.relationship('Offer', backref=db.backref('demands', lazy='dynamic'))
+    user_id = db.Column(db.Integer, db.ForeignKey('TBL_User.id'))
     user = db.relationship('User', backref=db.backref('demands', lazy='dynamic'))
 
-    products = db.relationship('Product', secondary='demand_products', backref=db.backref('demandas', lazy='dynamic'))
+    products = db.relationship('Product', secondary='demand_products', backref=db.backref('demands', lazy='dynamic'))
 
     def __init__(self, offer_id, total, user_id):
         super().__init__()
