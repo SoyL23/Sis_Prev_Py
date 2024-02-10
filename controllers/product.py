@@ -23,10 +23,10 @@ def product_create():
                 with db.session.begin():
                     db.session.add(new_product)
                     db.session.commit() 
-                    db.session.close()
+                    
                 return make_response('Producto Creado', 200)
             else: 
-                return make_response('Producto Vacío', 400) 
+                return make_response('Producto Vacío', 204) 
         except Exception as e:
             return 'Ha ocurrido un error: ' + str(e)
     else:
@@ -41,7 +41,7 @@ def delete_product(id):
             with db.session.begin():
                 db.session.delete(product_deleted)
                 db.session.commit()
-                db.session.close()
+                
             return make_response('Producto Eliminado', 200)
         except Exception as e:
             return 'Ha ocurrido un error: ' + str(e)
@@ -65,9 +65,11 @@ def update_product(id):
 
             with db.session.begin():
                 db.session.commit()
-                db.session.close()
+                
 
             return make_response('Producto Actualizado', 200)
+        else: 
+            return make_response('No existe el Producto', 204)
     else:
         return make_response('Invalid Request', 400)
         

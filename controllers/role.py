@@ -4,7 +4,7 @@ from models.role import Role
 from services.require_content_type import require_content_type
 
 role = Blueprint('role', __name__)
-
+#------------------------------------------------------------------------------------Inicio
 @require_content_type('aplication/JSON')
 @role.route('/role/create', methods=['GET', 'POST'])
 def create_role():
@@ -27,7 +27,7 @@ def create_role():
                     
                 return make_response('Se ha creado el rol', 200)
             else:
-                return make_response('Invalid Data', 400)
+                return make_response('Invalid Data', 204)
         except Exception as e:
             return jsonify(f'Ha ocurrido un error: {e}')
 #------------------------------------------------------------------------------------Fin
@@ -46,7 +46,7 @@ def delete_role(id):
                     
                 return make_response('Se ha eliminado el rol', 200)
             else: 
-                return make_response('Usuario no Existe', 200)
+                return make_response('Rol no Existe', 204)
         except Exception as e:
             return jsonify(f'Ha ocurrido un error: {e}')
     else:
@@ -66,10 +66,9 @@ def update_role(id):
                 role.description = role_update['description']
                 with db.session.begin():
                     db.session.commit()
-                    
-                return make_response('Usuario actualizado', 200)
+                return make_response('Rol actualizado', 200)
             else:
-                return make_response('Rol no encontrado')
+                return make_response('Rol no encontrado', 204)
         except Exception as e:
             return jsonify(f'Ha ocurrido un error: {e}')
     elif request.method == 'GET':
@@ -101,6 +100,6 @@ def get_role_list():
                     list_roles[rol.id] = rol.to_dict()
                 return jsonify(list_roles)
             else:
-                return make_response('No hay Roles', 200)
+                return make_response('No hay Roles', 204)
         except Exception as e:
             return jsonify(f'Ha ocurrido un error: {e}')

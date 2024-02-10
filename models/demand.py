@@ -1,7 +1,6 @@
 from config.db import db
 from models.user import User
 from models.offer import Offer
-
 class Demand(db.Model):
     __tablename__ ='TBL_Demand'
     id = db.Column(db.Integer, primary_key=True)
